@@ -1,11 +1,144 @@
-# Sample Snack app
+# WAI (WHY AM I)
 
-Open the `App.js` file to start writing some code. You can preview the changes directly on your phone or tablet by scanning the **QR code** or use the iOS or Android emulators. When you're done, click **Save** and share the link!
+> 나를 들여다보는 식단 관리 앱
 
-When you're ready to see everything that Expo provides (or if you want to use your own editor) you can **Download** your project and use it with [expo cli](https://docs.expo.dev/get-started/installation/#expo-cli)).
+"나는 왜 먹는가", "어떨 때 폭식을 하게 되나"를 먼저 이해하는 것에서 시작하는 식단 관리 앱입니다. 
 
-All projects created in Snack are publicly available, so you can easily share the link to this project via link, or embed it on a web page with the `<>` button.
+---
 
-If you're having problems, you can tweet to us [@expo](https://twitter.com/expo) or ask in our [forums](https://forums.expo.dev/c/expo-dev-tools/61) or [Discord](https://chat.expo.dev/).
+## 📱 프로젝트 소개
 
-Snack is Open Source. You can find the code on the [GitHub repo](https://github.com/expo/snack).
+기존 칼로리 앱은 식단만 봅니다. WAI는 다릅니다.
+
+감정 + 상황 + 수면 데이터를 조합해 개인별 폭식 트리거를 파악하고, 실패한 날도 데이터로 전환해 다음 시작점을 재설정합니다.
+
+---
+
+## 🛠 기술 스택
+
+- **Framework**: React Native (Expo)
+- **Navigation**: React Navigation Native Stack
+- **State Management**: Context API + AsyncStorage
+- **External API**: 식품의약품안전처 식품영양성분 공공데이터 API
+
+---
+
+## 📂 프로젝트 구조
+
+```
+wai/
+├── App.js
+├── context/
+│   └── UserContext.js
+└── screen/
+    ├── SplashScreen.js
+    ├── onboarding/
+    │   ├── Step1.js          # 기본 정보 입력
+    │   ├── Step2.js          # 목표 설정
+    │   ├── Step3.js          # 목표 체중 + 기간
+    │   ├── Step4.js          # 활동량 선택
+    │   └── Step5.js          # 카드 생성
+    └── main/
+        ├── MainScreen.js     # 메인 화면
+        ├── FoodSearch.js     # 식단 검색
+        ├── PatternIntro.js   # 패턴 테스트 인트로
+        ├── PatternTest.js    # 패턴 테스트 (10문항)
+        ├── PatternResult.js  # 패턴 결과
+        ├── TodayFailed.js    # 오늘 망했어요 플로우
+        └── ReportScreen.js   # 주간 리포트
+```
+
+---
+
+## 🚀 시작하기
+
+```bash
+# 패키지 설치
+npm install
+
+# 앱 실행
+npx expo start
+```
+
+---
+
+## ✨ 주요 기능
+
+### 1. 온보딩 (5단계)
+- 기본 정보 입력 (이름 · 나이 · 성별 · 키 · 체중)
+- 목표 설정 (체중관리 / 감정+체중)
+- 목표 체중 + 기간 입력
+- 활동량 선택 → TDEE 기반 목표 칼로리 자동 계산
+- 목표 칼로리 · 탄단지 카드 생성
+
+### 2. 패턴 테스트
+- 10문항 5점 리커트 척도
+- 감정 & 스트레스 / 숨겨진 패턴 / 심리 & 죄책감 3개 카테고리
+- 4가지 유형 분류: 감정적 섭식 / 무의식적 섭식 / 악순환 섭식 / 균형 섭식
+
+### 3. 메인화면
+- 오늘 감정 선택 → WAI 맞춤 분석 코멘트
+- 감정 기반 오늘 추천 식단
+- 식단 검색 (공공 API 연동) + 칼로리 · 탄단지 실시간 반영
+- 권장 섭취량 초과 시 경고 표시
+
+### 4. 오늘 망했어요 플로우
+- 공감 → 감정 원인 → 상황 파악 → 랜덤 추가 질문
+- 즉각 인사이트 제공 (감정 + 상황 조합 분석)
+- 패턴 진행 바 (7일 기록 시 패턴 발견)
+- 내일 시작점 재설정
+
+### 5. 주간 리포트
+- 이번 주 감정 달력
+- 패턴 발견 요약 (가장 많은 감정 · 상황 · 야식 횟수)
+- 나만의 패턴 인사이트 (규칙 기반 분석)
+- 탄단지 주간 차트 (초과 섭취 빨간색 표시)
+
+---
+
+## 📊 칼로리 계산 방식
+
+| 단계 | 내용 | 출처 |
+|------|------|------|
+| BMR | 해리스-베네딕트 공식 | Harris & Benedict (1919) |
+| TDEE | BMR × 활동 계수 | ACSM 기준 |
+| 목표 칼로리 | TDEE − 하루 적자 | 지방 1kg = 7,000kcal(서울삼성병원) |
+| 탄단지 비율 | 체중관리 탄40/단30/지30 | - |
+
+최소 칼로리 보장: 여자 1,200kcal / 남자 1,500kcal 
+
+---
+
+## 🎨 디자인 컨셉
+
+| 영역 | 색상 |
+|------|------|
+| 메인 | 네이비 `#1A2A7A` + 화이트 |
+| 패턴 테스트 | 네이비 `#1A2A7A` + 라임 `#C6FF00` |
+| 오늘 망했어요 | 파스텔 4단계 변화 |
+
+---
+
+## 📌 한계점
+
+- 패턴 인사이트가 뜨기까지 데이터 누적 시간 오래 필요. 
+- 식단 · 감정 기록이 모두 수동 입력.
+- 식단추천이 고정적 구조로 유저의 선호도 및 알레르기 특성을 반영하지 못함. 
+
+---
+
+## 🔮 개선 방향
+
+- Claude API 연동으로 데이터 1개부터 즉각 인사이트 제공
+- 매일 감정 질문과 함께 "오늘 뭐가 땡겨요?" + 알레르기 유무 질문 등 으로 식단 추천 개인화
+- 푸시 알림 + 서버 기반 데이터 저장 구조로 전환
+
+---
+
+## 👩‍💻 개발 환경
+
+- Expo SDK 51
+- React Native 0.74
+- Node.js 18+
+
+---
