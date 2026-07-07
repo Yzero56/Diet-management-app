@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { useUser } from '../../context/UserContext';
 
-const API_KEY = '개인 API-KEY';
+const API_KEY = 'process.env.FOOD_API_KEY';
 
 export default function FoodSearch({ navigation }) {
   const { userInfo, setUserInfo } = useUser();
